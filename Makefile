@@ -1,7 +1,7 @@
 all: lockbox test
 
 test: test.o
-	gcc test.o -o test -Wall -O2
+	gcc lockbox.o test.o -o test -Wall -O2
 
 test.o: test.c
 	gcc -c -O2 -Wall test.c 
