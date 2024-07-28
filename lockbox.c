@@ -1,11 +1,11 @@
 #include "lockbox.h"
 
-Lockbox *lockboxInit(int8 *key, int16 size)
+export Lockbox *lockboxInit(int8 *key, int16 size)
 {
     int16 x;
     int8 temp1, temp2;
-
     Lockbox *p;
+    int32 n;
 
     if (!(p = malloc(sizeof(struct s_lockbox))))
         assert_perror(errno);
@@ -31,6 +31,7 @@ Lockbox *lockboxInit(int8 *key, int16 size)
     }
 
     p->i = p->j = 0;
+    lockboxWhiteWash(n, p);
 
     return p;
 };
@@ -52,6 +53,17 @@ int8 lockboxByte(Lockbox *p)
     return p->k;
 }
 
-int8 *lockboxEncrypt(Lockbox *p, int8 *normalText, int16 size)
+export int8 *lockboxEncrypt(Lockbox *p, int8 *normalText, int16 size)
 {
+    int8 *cipherText;
+    int16 x;
+
+    cipherText = (int8 *)malloc(size + 1);
+    if (!cipherText)
+        assert_perror(errno);
+
+    for (x = 0; x < size; x++)
+        cipherText[x] = normalText[x] ^ lockboxByte(p);
+
+    return cipherText;
 }
